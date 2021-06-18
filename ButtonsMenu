@@ -1,0 +1,17 @@
+public class ButtonsMenu : MonoBehaviour
+{
+  public void ChamaJogo()
+  {
+    UnityEngine.SceneManagement.SceneManager.LoadScene("Jogo");
+  }
+  
+  public void ChamaCreditos()
+  {
+    UnityEngine.SceneManagement.SceneManager.LoadScene("Creditos");
+  }
+  
+  public void FecharJogo()
+  {
+    Application.Quit();
+  }
+}
