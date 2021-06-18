@@ -1,0 +1,30 @@
+public class Inimigo : MonoBehaviour {
+
+ public GameObject[] locais;
+ public int destinoInicial = 0;
+ public float velocidade = 10;
+ int localAtual = 0;
+
+ void Start()
+ {
+    if (destinoInicial < locais.Length) 
+    {
+      localAtual = destinoInicial;
+    }
+    else 
+    {
+      localAtual = 0;
+    }
+ }
+
+void Update() 
+{
+  if (Vector3.Distance (transform.position, locais [localAtual].transform.position) < 0.1f)
+  {
+    if (localAtual < locais.Length - 1) 
+    {
+      localAtual++;
+    } 
+  }
+ transform.position = Vector3.MoveTowards (transform.position, locais [localAtual].transform.position, velocidade*Time.deltaTime);
+}
