@@ -1,6 +1,8 @@
+//Tu tem que estar com um box collider tanto no prefab do machado, quanto no inimigo, e no inimigo tu tbm vai por o Rigidbody.
+
 ShootCollision : MonoBehaviour
 
-OnCollision()
+private void OnCollisionEnter2D(Collision2D collision)
 {
-  Destroy(gameObject);
+  Destroy(this.gameObject);
 }
