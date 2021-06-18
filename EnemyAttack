@@ -15,7 +15,9 @@ Transform jogador;
 public GameObject machado; //objeto que o inimigo atira.
 public Transform shootPoint; //ponto de onde sai esse objeto.
 public float distShoot; //distancia do tiro pra o jogador.
+public float speedShoot = 5.0f;
 bool isShooting; //se o inimigo ta atirando ou nao.
+
 
 void Start()
 {
@@ -40,5 +42,5 @@ void Update()
 }
 void Shoot()
 {
-  Instantiate(machado, shootPoint.position, shootPoint.rotation);
+  Instantiate(machado, shootPoint.position, shootPoint.rotation * speedShoot);
 }
