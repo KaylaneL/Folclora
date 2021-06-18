@@ -1,0 +1,6 @@
+ShootCollision : MonoBehaviour
+
+OnCollision()
+{
+  Destroy(gameObject);
+}
