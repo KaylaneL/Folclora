@@ -1,0 +1,44 @@
+/*
+Tu vais criar esse scritp abaixo, e vai colocar ele dentro do GameObject inimigo ne.
+Dai quando tu por, se tu for olhar, vai ficar pedindo um shootPoint, e o GameObject machado.
+Dai tu vai criar um objeto vazio, e vai colocar no lugar de onde que tu quer que saia o tiro.
+Dps, do hierarch tu vai arrastar esse GameObject pra dentro do script, onde ta pedindo ele.
+Na parte do machado, tu vai pegar um prefab qualquer e vai por dentro desse script, so pra representar o tiro.
+E no player, tu vai precisar criar uma Tag pra ele, tu poe o nome dela de Player.
+Essa distShoot, tu poe um número ai que tu achar legal, 15, sla.
+Se tiver algum erro fala no grupo la.
+*/
+
+EnemyAttack : Behaviour
+
+Transform jogador;
+public GameObject machado; //objeto que o inimigo atira.
+public Transform shootPoint; //ponto de onde sai esse objeto.
+public float distShoot; //distancia do tiro pra o jogador.
+bool isShooting; //se o inimigo ta atirando ou nao.
+
+void Start()
+{
+  jogador = GameObject.FindGameObjectWhitTag("Player").Transform; //tu vai criar uma tag chamada Player e colocar no player
+}
+void Update()
+{
+  float distance = Vector3.Distance(transform.position, goal.position);
+  if(distance <= distShoo)
+  {
+    if(!isShooting)
+    {
+    InvokeRepeating("Shoot", 0f, 0.2f)
+    isShooting = true;
+    }  
+  }
+  else
+  {
+    CancelInvoke("Shoot");
+    isShooting = false;
+  }
+}
+void Shoot()
+{
+  Instantiate(machado, shootPoint.position, shootPoint.rotation);
+}
