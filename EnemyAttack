@@ -1,32 +1,36 @@
 /*
-Tu vais criar esse scritp abaixo, e vai colocar ele dentro do GameObject inimigo ne.
-Dai quando tu por, se tu for olhar, vai ficar pedindo um shootPoint, e o GameObject machado.
-Dai tu vai criar um objeto vazio, e vai colocar no lugar de onde que tu quer que saia o tiro.
-Dps, do hierarch tu vai arrastar esse GameObject pra dentro do script, onde ta pedindo ele.
-Na parte do machado, tu vai pegar um prefab qualquer e vai por dentro desse script, so pra representar o tiro.
-E no player, tu vai precisar criar uma Tag pra ele, tu poe o nome dela de Player.
-Essa distShoot, tu poe um número ai que tu achar legal, 15, sla.
-Se tiver algum erro fala no grupo la.
+Com o GameObject "Inimigo" já criado, tu vai adicionar esse Script a ele.
+(Lembre-se de adicionar a Tag "Player" ao jogador)
+Com o script já adicionado, tu vai abrir o spector do player, e na parte do script vai estar pedindo o "machado",
+dai tu vai criar um prefab qualquer, um cubo sla, e vai adicionar a esse "None()"
+e depois tu vai testar pra ver se ta tudo funcionando como deveria.
 */
 
 EnemyAttack : Behaviour
 
-Transform jogador;
+Transform alvo; //alvo do inimigo
+public float range = 15.0f; //área de ataque
 public GameObject machado; //objeto que o inimigo atira.
 public Transform shootPoint; //ponto de onde sai esse objeto.
-public float distShoot; //distancia do tiro pra o jogador.
-public float speedShoot = 5.0f;
+public float speedShoot = 5.0f; //velocidade do tiro
 bool isShooting; //se o inimigo ta atirando ou nao.
-
 
 void Start()
 {
-  jogador = GameObject.FindGameObjectWhitTag("Player").Transform; //tu vai criar uma tag chamada Player e colocar no player
+  alvo = GameObject.FindGameObjectWhitTag("Player").Transform; //tu vai criar uma tag chamada Player e colocar no jogador;
 }
+
 void Update()
 {
-  float distance = Vector3.Distance(transform.position, goal.position);
-  if(distance <= distShoo)
+  //rotação do inimigo
+  Vector3 dir = alvo.position - transform.position;
+  Quaternion lookRotation = Quaternion.lookRotation(dir);
+  Vector3 rotation = lookRotation.EulerAngles;
+  Inimigo.rotation = lookRotation;
+  
+  //atirar
+  float distance = Vector3.Distance(transform.position, alvo.position);
+  if(distance <= 15)
   {
     if(!isShooting)
     {
@@ -40,7 +44,14 @@ void Update()
     isShooting = false;
   }
 }
-void Shoot()
+
+void OnDrawGizmosSelected() //range de ataque do inimigo
+{
+  Gizmos.color = red;
+  Gizmos.DrawWireSphere(transform.position,range);
+}
+
+void Shoot() //tiro
 {
   Instantiate(machado, shootPoint.position, shootPoint.rotation * speedShoot);
 }
