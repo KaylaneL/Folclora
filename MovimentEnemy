@@ -19,7 +19,7 @@ public class Inimigo : MonoBehaviour {
 
 void Update() 
 {
-  if (Vector3.Distance (transform.position, locais [localAtual].transform.position) < 0.1f)
+   if (Vector3.Distance (transform.position, locais [localAtual].transform.position) < 0.1f)
   {
     if (localAtual < locais.Length - 1) 
     {
@@ -27,4 +27,14 @@ void Update()
     } 
   }
  transform.position = Vector3.MoveTowards (transform.position, locais [localAtual].transform.position, velocidade*Time.deltaTime);
+
+    if (Vector3.Distance(transform.position, locais[localAtual].transform.position) < 0.1f)
+   {
+     if (localAtual > 0)
+     {
+        localAtual--;
+     }
+   }
+transform.position = Vector3.MoveTowards(transform.position, locais[localAtual].transform.position, velocidade * Time.deltaTime);
+
 }
