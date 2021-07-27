@@ -55,3 +55,5 @@ void Shoot() //tiro
 {
   Instantiate(machado, shootPoint.position, shootPoint.rotation * speedShoot);
 }
+
+https://www.youtube.com/watch?v=x1OZE6Duk7Q
