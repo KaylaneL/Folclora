@@ -1,23 +1,38 @@
 public class Bullet : MonoBehaviour
 {
-    public float speed = 15f;
+
     private Transform alvo;
-    // Start is called before the first frame update
-   public void Seek(Transform _alvo)
-   {
-       alvo = _alvo;
+    public float speed = 15f;
+
+    public void Seek(Transform _alvo)
+    {
+        alvo = _alvo;
+    }
+
+    void Update()
+    {
+        if (alvo == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Vector3 dir = alvo.position - transform.position;
+        float distanceThisFrame = speed * Time.deltaTime;
+
+        if (dir.magnitude <= distanceThisFrame)
+        {
+            HitAlvo();
+            return;
+        }
+
+        transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+        transform.LookAt(alvo);
+
    }
 
-   void Update(){
-       if(alvo == null)
-       {
-           Destroy(GameObject);
-           return;
-       }
-
-       Vector3 dir = alvo.position - transform.position;
-       float distanceThisFrame = speed * Time.deltaTime;
-
-       if(dir.magnitude <= distanceThisFrame)
-   }
+    void HitAlvo()
+    {
+        Debug.Log("Shoot");
+    }
 }
