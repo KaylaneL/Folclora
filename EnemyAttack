@@ -1,75 +1,81 @@
-public class EnemyAttack : MonoBehaviour
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AttackEnemy : MonoBehaviour
 {
-    public float range = 5.0f;
-    public Transform alvo;
-    public string InimigoDoInimigoTag = "Player";
-    public Transform rotacionar;
-    public float turnSpeed = 10.0f;
-    public GameObject bulletPrefab;
-    public Transform firePoint;
-    public float fireRate = 15f;
-    public float fireCountdown = 0f;
+        public Transform alvo;
+        public string InimigoDoInimigoTag = "Player";
+        public float range = 5.0f;
+        public float turnSpeed = 10.0f;
+        public Transform rotacionar;
+        
 
-    {
-        InvokeRepeating("UpdateAlvo", 0f, 0.5f);
-    }
+        public GameObject bulletPrefab;
+        public Transform firePoint;
+        public float fireRate = 15f;
+        public float fireCountdown = 0f;
 
-    void UpdateAlvo()
-    {
-        GameObject[] inimigos = GameObject.FindGameObjectsWithTag(InimigoDoInimigoTag);
-        float shortestDistance = Mathf.Infinity;
-        GameObject nearestEnemy = null;
-        foreach (GameObject inimigo in inimigos)
+        void Start()
         {
-            float DistanceToEnemy = Vector3.Distance(transform.position, inimigo.transform.position);
-            if (DistanceToEnemy < shortestDistance)
+            InvokeRepeating("UpdateAlvo", 0f, 0.5f);
+        }
+
+        void UpdateAlvo()
+        {
+            GameObject[] inimigos = GameObject.FindGameObjectsWithTag(InimigoDoInimigoTag);
+            float shortestDistance = Mathf.Infinity;
+            GameObject nearestEnemy = null;
+            foreach (GameObject inimigo in inimigos)
             {
-                shortestDistance = DistanceToEnemy;
-                nearestEnemy = inimigo;
+                float distanceToEnemy = Vector3.Distance(transform.position, inimigo.transform.position);
+                if (distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    nearestEnemy = inimigo;
+                }
+            }
+
+            if (nearestEnemy != null && shortestDistance <= range)
+            {
+                alvo = nearestEnemy.transform;
             }
         }
 
-        if (nearestEnemy != null && shortestDistance <= range)
+        void Update()
         {
-            alvo = nearestEnemy.transform;
+            if (alvo == null)
+            {
+                return;
+            }
+
+            Vector3 dir = alvo.position - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(rotacionar.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
+            rotacionar.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+
+            if (fireCountdown <= 0F)
+            {
+                Shoot();
+                fireCountdown = 1f / fireRate;
+            }
+
+            fireCountdown -= Time.deltaTime;
         }
-    }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (alvo == null)
+        void Shoot()
         {
-            return;
+            GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            Bullet bullet = bulletGO.GetComponent<Bullet>();
+
+            if (bullet != null)
+                bullet.Seek(alvo);
         }
 
-        Vector3 dir = alvo.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = lookRotation.eulerAngles;
-        rotacionar.rotation = Quaternion.Euler(0f, rotation.y, 0f);
-
-        if(fireCountdown <= 0F)
+        void OnDrawGizmosSelected()
         {
-            Shoot();
-            fireCountdown = 1f / fireRate;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, range);
         }
-        fireCountdown -= Time.deltaTime;
-    }
-
-
-    void OnDrawGizmosSelected() // intervalo de ataque do inimigo
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
-    }
-
-    void Shoot()
-    {
-        GameObject bulletGO = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Bullet bullet = bulletGO.GetComponent<Bullet>();
-
-        if(bullet != null)
-        bullet.Seek(alvo);
-    }
+    
 }
